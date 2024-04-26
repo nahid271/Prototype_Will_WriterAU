@@ -107,3 +107,49 @@
 
 })(jQuery);
 
+const express = require('express');
+const nodemailer = require('nodemailer');
+
+const app = express();
+
+// Configure nodemailer with your email credentials
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'your-email@gmail.com',
+    pass: 'your-email-password'
+  }
+});
+
+// Handle Google Sign-In
+app.get('/google-signin', (req, res) => {
+  // Handle Google Sign-In logic here
+  
+  // Assuming user signed in successfully
+  const userEmail = 'user@example.com'; // Get the user's email
+
+  // Send notification email
+  transporter.sendMail({
+    from: 'your-email@gmail.com',
+    to: 'your-email@gmail.com', // Your email address
+    subject: 'New Sign-In via Google',
+    text: `User ${userEmail} signed in via Google.`
+  }, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+
+  res.send('Sign-in successful');
+});
+
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+
